@@ -24,7 +24,7 @@ export class ClassService {
   }
 
   getListClassTeacher = async (teacherId: string) => {
-    return await this.classModel.find({ teacher: teacherId }).populate('subject').exec()
+    return await this.classModel.find({ teacher: teacherId }).populate(['subject', 'semester']).exec()
   }
 
   getClassDetail = async (classId: string) => {
