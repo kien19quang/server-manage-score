@@ -23,6 +23,11 @@ export class UserController {
     return await this.userService.getListAdmin();
   }
 
+  @Get('test')
+  async test() {
+    return await this.userService.getFileUpload()
+  }
+
   @Get('teacher')
   @UseGuards(JwtGuard)
   async getListTeacher() {

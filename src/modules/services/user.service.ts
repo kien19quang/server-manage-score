@@ -157,4 +157,21 @@ export class UserService {
   async getTranscriptStudent(studentId: string) {
     return await this.transcriptModel.find({ student: studentId }).populate(['student', 'teacher', 'subject', 'semester']).exec()
   }
+
+  async getFileUpload() {
+    const response = await axios.request({
+      url: 'https://scontent-ham3-1.xx.fbcdn.net/v/t39.30808-1/350788057_579366280962856_4571341295059703285_n.png?stp=dst-png_s200x200&_nc_cat=107&ccb=1-7&_nc_sid=79bf43&_nc_eui2=AeEpHfi5uwoKeLsUdneqeojfsdJP557OSEix0k_nns5ISEM7GtsVgsopmLtlbhaRHTYRpFdSK1o3CWXnXZWTzxXh&_nc_ohc=_ql9eyfdb0AQ7kNvgHw5j76&_nc_zt=24&_nc_ht=scontent-ham3-1.xx&edm=AOf6bZoEAAAA&_nc_gid=AgjBCHl7uCFl-NlAiEw03qA&oh=00_AYAOMDLjGHCLnKONXek93fAWlEPZF9LauTjvkxvxA8VC-Q&oe=67C4B5AD',
+      method: 'GET',
+      responseType: 'arraybuffer',
+    });
+    const fileBuffer = Buffer.from(response.data, 'binary');
+    const buffer = fileBuffer;
+    const originalname = `123`;
+    const size = Buffer.byteLength(buffer);
+    return {
+      originalname: originalname,
+      buffer: buffer,
+      size: size,
+    };
+  }
 }
