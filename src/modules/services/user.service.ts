@@ -2,7 +2,6 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateStudentDto, CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
-import axios from 'axios';
 import { Admin } from 'src/schema/admin.schema';
 import { Student } from 'src/schema/student.schema';
 import { Teacher } from 'src/schema/teacher.schema';
@@ -14,7 +13,7 @@ export class UserService {
     @InjectModel(Admin.name) private readonly adminModel: Model<Admin>,
     @InjectModel(Student.name) private readonly studentModel: Model<Student>,
     @InjectModel(Teacher.name) private readonly teacherModel: Model<Teacher>,
-    @InjectModel(Transcript.name) private readonly transcriptModel: Model<Transcript>
+    @InjectModel(Transcript.name) private readonly transcriptModel: Model<Transcript>,
   ) {}
 
   async getListAdmin() {
@@ -22,12 +21,12 @@ export class UserService {
   }
 
   async getListTeacher() {
-    return await this.teacherModel.find().sort({ createdAt: 'desc' })
+    return await this.teacherModel.find().sort({ createdAt: 'desc' });
   }
 
   async getListStudent() {
-    const response = await this.studentModel.find().sort({ createdAt: 'desc' }).populate(['semester']).exec()
-    return response
+    const response = await this.studentModel.find().sort({ createdAt: 'desc' }).populate(['semester']).exec();
+    return response;
   }
 
   async createAdmin(data: CreateUserDto) {
@@ -37,11 +36,11 @@ export class UserService {
 
     if (admin) throw new ConflictException('Email đã tồn tại');
 
-    const countAdmin = await this.adminModel.countDocuments()
+    const countAdmin = await this.adminModel.countDocuments();
 
     const newAdmin = await this.adminModel.create({
       _id: `ADMIN_${countAdmin + 1}`,
-      ...data
+      ...data,
     });
 
     return newAdmin;
@@ -54,11 +53,11 @@ export class UserService {
 
     if (teacher) throw new ConflictException('Email đã tồn tại');
 
-    const countTeacher = await this.teacherModel.countDocuments()
+    const countTeacher = await this.teacherModel.countDocuments();
 
     const newTeacher = await this.teacherModel.create({
       _id: `T${countTeacher + 1}`,
-      ...data
+      ...data,
     });
 
     return newTeacher;
@@ -71,7 +70,7 @@ export class UserService {
 
     if (student) throw new ConflictException('Email đã tồn tại');
 
-    const countStudent = await this.studentModel.countDocuments()
+    const countStudent = await this.studentModel.countDocuments();
 
     const newStudent = await this.studentModel.create({
       _id: `A${countStudent + 1}`,
@@ -79,7 +78,7 @@ export class UserService {
       ...data,
     });
 
-    await newStudent.populate('semester')
+    await newStudent.populate('semester');
 
     return newStudent;
   }
@@ -101,12 +100,18 @@ export class UserService {
   }
 
   async updateStudent(id: string, data: CreateStudentDto) {
-    const student = await this.studentModel.findOneAndUpdate({ _id: id }, {
-      ...data,
-      semester: data.semesterId
-    }, {
-      new: true,
-    }).populate('semester');
+    const student = await this.studentModel
+      .findOneAndUpdate(
+        { _id: id },
+        {
+          ...data,
+          semester: data.semesterId,
+        },
+        {
+          new: true,
+        },
+      )
+      .populate('semester');
 
     return student;
   }
@@ -148,30 +153,189 @@ export class UserService {
   }
 
   async getStudentProfile(id: string) {
-    console.log(id)
-    return await this.studentModel.findOne({
-      _id: id,
-    }).populate('semester').exec();
+    console.log(id);
+    return await this.studentModel
+      .findOne({
+        _id: id,
+      })
+      .populate('semester')
+      .exec();
   }
 
   async getTranscriptStudent(studentId: string) {
-    return await this.transcriptModel.find({ student: studentId }).populate(['student', 'teacher', 'subject', 'semester']).exec()
+    return await this.transcriptModel.find({ student: studentId }).populate(['student', 'teacher', 'subject', 'semester']).exec();
   }
 
   async getFileUpload() {
-    const response = await axios.request({
-      url: 'https://scontent-ham3-1.xx.fbcdn.net/v/t39.30808-1/350788057_579366280962856_4571341295059703285_n.png?stp=dst-png_s200x200&_nc_cat=107&ccb=1-7&_nc_sid=79bf43&_nc_eui2=AeEpHfi5uwoKeLsUdneqeojfsdJP557OSEix0k_nns5ISEM7GtsVgsopmLtlbhaRHTYRpFdSK1o3CWXnXZWTzxXh&_nc_ohc=_ql9eyfdb0AQ7kNvgHw5j76&_nc_zt=24&_nc_ht=scontent-ham3-1.xx&edm=AOf6bZoEAAAA&_nc_gid=AgjBCHl7uCFl-NlAiEw03qA&oh=00_AYAOMDLjGHCLnKONXek93fAWlEPZF9LauTjvkxvxA8VC-Q&oe=67C4B5AD',
-      method: 'GET',
-      responseType: 'arraybuffer',
-    });
-    const fileBuffer = Buffer.from(response.data, 'binary');
-    const buffer = fileBuffer;
-    const originalname = `123`;
-    const size = Buffer.byteLength(buffer);
     return {
-      originalname: originalname,
-      buffer: buffer,
-      size: size,
+      sensitive_operation: [
+        {
+          ip: '1.52.232.216',
+          timestamp: 1740671187,
+          operation: 'change_password',
+          country: 'VN',
+        },
+        {
+          ip: '1.52.232.216',
+          timestamp: 1740671096,
+          operation: 'change_email',
+          country: 'VN',
+        },
+        {
+          ip: '116.109.135.7',
+          timestamp: 1740652744,
+          operation: 'change_email',
+          country: 'VN',
+        },
+        {
+          ip: '116.109.135.7',
+          timestamp: 1740652726,
+          operation: 'change_password',
+          country: 'VN',
+        },
+        {
+          ip: '116.109.135.7',
+          timestamp: 1740652707,
+          operation: 'change_mobile_no',
+          country: 'VN',
+        },
+        {
+          ip: '14.229.25.239',
+          timestamp: 1737560234,
+          operation: 'change_mobile_no',
+          country: 'VN',
+        },
+      ],
+      login_history: [
+        {
+          ip: '1.52.232.216',
+          source: 'FC Online M (VN)',
+          timestamp: 1740672439,
+          country: 'VN',
+        },
+        {
+          ip: '1.52.232.216',
+          source: 'FC Online M (VN)',
+          timestamp: 1740672439,
+          country: 'VN',
+        },
+        {
+          ip: '1.52.232.216',
+          country: 'VN',
+          timestamp: 1740661175,
+          source: 'FC Online M (VN)',
+        },
+      ],
+      game_otp_configs: {
+        TW: {
+          '32775': {
+            status: 0,
+            sms_available: false,
+            name: '英雄聯盟',
+            authenticator_available: true,
+          },
+        },
+        MO: {
+          '32775': {
+            status: 0,
+            sms_available: false,
+            name: '英雄聯盟',
+            authenticator_available: true,
+          },
+        },
+        VN: {
+          '32787': {
+            status: 0,
+            sms_available: false,
+            name: 'Liên Minh Huyền Thoại',
+            authenticator_available: true,
+          },
+        },
+        HK: {
+          '32775': {
+            status: 0,
+            sms_available: false,
+            name: '英雄聯盟',
+            authenticator_available: true,
+          },
+        },
+        TH: {
+          '32786': {
+            status: 0,
+            sms_available: false,
+            name: 'League of Legends',
+            authenticator_available: true,
+          },
+        },
+        PH: {
+          '32774': {
+            status: 0,
+            sms_available: false,
+            name: 'League of Legends',
+            authenticator_available: true,
+          },
+        },
+      },
+      country: 'VN',
+      init_ip: '14.232.245.149',
+      user_info: {
+        status: 1,
+        acc_country: 'VN',
+        uid: 449707448,
+        suspicious: false,
+        mobile_no: '****6774',
+        country_code: '84',
+        authenticator_algorithm: 2,
+        mobile_binding_status: 0,
+        send_otp_methods: {
+          region_br: {
+            options: ['sms_gateway'],
+          },
+          region_my: {
+            options: ['sms_gateway'],
+          },
+          region_id: {
+            options: ['whatsapp_gateway', 'sms_gateway'],
+          },
+          region_sg: {
+            options: ['sms_gateway'],
+          },
+          region_hk: {
+            options: ['sms_gateway'],
+          },
+          region_ph: {
+            options: ['sms_gateway'],
+          },
+          region_th: {
+            options: ['sms_gateway'],
+          },
+          region_tw: {
+            options: ['sms_gateway'],
+          },
+          region_vn: {
+            options: [],
+          },
+          region_cl: {
+            options: ['sms_gateway'],
+          },
+          region_mx: {
+            options: ['sms_gateway'],
+          },
+        },
+        email_verified_time: 1740671138,
+        email: 'qua****@gmail.com',
+        username: 'huonggiangboo',
+        shell: 0,
+        password_s: 4,
+        email_v: 1,
+        authenticator_enable: 0,
+        nickname: '',
+        two_step_verify_enable: 1,
+        email_verify_available: true,
+        avatar: 'https://cdngarenanow-a.akamaihd.net/gxx/resource/avatar/0.jpg',
+        signature: '',
+        fb_account: null,
+      },
     };
   }
 }
